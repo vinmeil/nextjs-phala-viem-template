@@ -2,9 +2,9 @@
 "use client";
 import Image from "next/image";
 import styles from "./page.module.css";
-import React, { useState } from 'react';
-import 'dotenv/config';
-import FormData from 'form-data';
+import React, { useState } from "react";
+import "dotenv/config";
+import FormData from "form-data";
 
 function hexToUint8Array(hex: string) {
   hex = hex.trim();
@@ -39,12 +39,15 @@ async function uploadUint8Array(data: Uint8Array) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const result = await fetch("https://dstack-sim-explorer.vercel.app/api/upload", {
-    method: "POST",
-    // @ts-ignore
-    body: formData,
-    mode: 'no-cors',
-  });
+  const result = await fetch(
+    "https://dstack-sim-explorer.vercel.app/api/upload",
+    {
+      method: "POST",
+      // @ts-ignore
+      body: formData,
+      mode: "no-cors",
+    }
+  );
   console.log(result);
   return result;
 }
@@ -55,13 +58,14 @@ export default function Home() {
   // Define the function to be called on button click
   const handleClick = async (path: string) => {
     try {
+      console.log("-----======= got here =======-----");
       let response, data;
-      if (path === '/api/signMessage') {
+      if (path === "/api/signMessage") {
         const messageData = { message: "t/acc" };
         response = await fetch(path, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(messageData),
         });
@@ -69,24 +73,32 @@ export default function Home() {
         console.log(JSON.stringify(data));
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
       } else {
+        console.log("-----======= after else =======-----");
         response = await fetch(path);
         data = await response.json();
         console.log(JSON.stringify(data));
-        if (path === '/api/remoteAttestation') {
+        if (path === "/api/remoteAttestation") {
+          console.log("-----======= after if statement =======-----");
           const remoteAttestionQuoteHex = data.quote;
           console.log(remoteAttestionQuoteHex);
-          const remoteAttestationQuoteU8Array = hexToUint8Array(remoteAttestionQuoteHex);
+          const remoteAttestationQuoteU8Array = hexToUint8Array(
+            remoteAttestionQuoteHex
+          );
           console.log(remoteAttestationQuoteU8Array);
-          console.log('Uploading Attestation...');
-          const uploadResult = await uploadUint8Array(remoteAttestationQuoteU8Array);
+          console.log("Uploading Attestation...");
+          const uploadResult = await uploadUint8Array(
+            remoteAttestationQuoteU8Array
+          );
           console.log(uploadResult);
-          console.log('Upload Complete...');
+          console.log("Upload Complete...");
         }
+        console.log("-----======= after if block =======-----");
         setResult(JSON.stringify(data, null, 2)); // Pretty print JSON
+        console.log("-----======= after setResult =======-----");
       }
     } catch (error) {
-      console.error('Error:', error);
-      setResult('Error: ' + error);
+      console.error("Error:", error);
+      setResult("Error: " + error);
     }
   };
 
@@ -102,34 +114,52 @@ export default function Home() {
           priority
         />
         <ol>
-          <li>
-            Generate a Remote Attestation.
-          </li>
+          <li>Generate a Remote Attestation.</li>
           <li>Get TEE Account.</li>
           <li>Test Signing Capabilities.</li>
         </ol>
         <div className={styles.ctas}>
-          <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/remoteAttestation')}>
+          <a
+            className={styles.primary}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleClick("/api/remoteAttestation")}
+          >
             Remote Attestation
           </a>
-          <a className={styles.primary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/account/address')}>
+          <a
+            className={styles.primary}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleClick("/api/account/address")}
+          >
             TEE Account
           </a>
         </div>
 
         <div className={styles.ctas}>
-          <a className={styles.secondary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/signMessage')}>
+          <a
+            className={styles.secondary}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleClick("/api/signMessage")}
+          >
             Sign Message
           </a>
-          <a className={styles.secondary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/signTypedData')}>
+          <a
+            className={styles.secondary}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleClick("/api/signTypedData")}
+          >
             Sign Typed Data
           </a>
-          <a className={styles.secondary} target="_blank"
-             rel="noopener noreferrer" onClick={() => handleClick('/api/signTransaction')}>
+          <a
+            className={styles.secondary}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleClick("/api/signTransaction")}
+          >
             Sign Transaction
           </a>
         </div>
